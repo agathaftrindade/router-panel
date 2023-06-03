@@ -75,6 +75,6 @@ func main() {
 	e.GET("/api/router-info", getRouterInfo)
 	e.Static("/", "static/")
 
-	e.Logger.Fatal(e.Start(":9200"))
+	e.Logger.Fatal(e.Start(":80"))
 
 }
