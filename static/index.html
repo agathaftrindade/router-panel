@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Vivo Router</title>
+
+        <link href="./bootstrap.min.css" rel="stylesheet">
+
+        <script>
+         const INFO_ENDPOINT = '/api/router-info'
+
+         function updateView(data) {
+             document.getElementById('link-value').innerHTML = data.link ? 'OK' : 'Offline'
+             document.getElementById('ppp-value').innerHTML = data.ppp ? 'Conectado' : 'Não Conectado'
+             document.getElementById('rx-value').innerHTML = `${data.rx} dBm`
+             document.getElementById('tx-value').innerHTML = `${data.tx} dBm`
+
+             document.getElementById('duration-value').innerHTML = data.duration
+         }
+
+         function fetchData(){
+             const startTime = new Date()
+             fetch(INFO_ENDPOINT)
+                 .then(r => r.json())
+                 .then(d => {
+                     const endTime = new Date()
+                     const timeDiff = endTime - startTime; //in ms
+                     /* timeDiff /= 1000; */
+
+                     updateView({
+                         duration: timeDiff,
+                         ...d
+                     })
+                     setTimeout(fetchData, 2)
+                 })
+
+         }
+
+         fetchData()
+
+        </script>
+    </head>
+    <body>
+        <main class="content p-2">
+            <div class="mb-2">
+                <div class="badge bg-success">
+                    <label >Link: </label>
+                    <label id="link-value"></label>
+                </div>
+                <div class="badge bg-success">
+                    <label>PPP: </label>
+                    <label id="ppp-value"></label>
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="badge bg-secondary">
+                    <label>Potência RX: </label>
+                    <label id="rx-value"></label>
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="badge bg-secondary">
+                    <label>Potência TX: </label>
+                    <label id="tx-value"></label>
+                </div>
+            </div>
+            <label>Carregado em <span id="duration-value"></span> ms</label>
+        </main>
+    </body>
+</html>
